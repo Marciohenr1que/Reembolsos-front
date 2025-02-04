@@ -1,0 +1,17 @@
+services:
+  frontend:
+    build:
+      context: .
+      target: development
+      args:
+        NODE_ENV: development
+    ports:
+      - "${VITE_PORT}:${VITE_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
