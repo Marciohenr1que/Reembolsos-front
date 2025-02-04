@@ -1,7 +1,11 @@
 <script setup></script>
 
 <template>
-  <h1 class="text-3xl font-bold underline bg-primary container">
-    Hello Wodddrld
-  </h1>
+  <div class="min-h-screen bg-neutral">
+    <main>
+      <div class="container mx-auto py-6">
+        <router-view></router-view>
+      </div>
+    </main>
+  </div>
 </template>
