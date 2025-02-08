@@ -4,7 +4,7 @@ import BaseInput from "@/components/BaseInput.vue";
 import BaseFileInput from "@/components/BaseFileInput.vue";
 import BaseForm from "@/components/BaseForm.vue";
 import { ReimbursementService } from "../../api/services/ReimbursementService";
-
+import CurrencyInput from "./CurrencyInput.vue";
 const form = ref({
   amount: "",
   description: "",
@@ -23,7 +23,7 @@ const submitReimbursement = async () => {
   try {
     await ReimbursementService.createReimbursement({
       ...form.value,
-      amount: Number(form.value.amount), // Garante que seja um número
+      amount: Number(form.value.amount),
     });
     alert("Reembolso enviado com sucesso!");
   } catch (error) {
@@ -35,12 +35,12 @@ const submitReimbursement = async () => {
 
 <template>
   <BaseForm submitText="Enviar Reembolso" @submit="submitReimbursement">
-    <BaseInput
+    <CurrencyInput
       id="amount"
       label="Valor"
-      type="number"
       v-model="form.amount"
       required
+      :error="errors.amount"
     />
     <BaseInput
       id="description"

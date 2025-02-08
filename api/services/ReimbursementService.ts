@@ -1,5 +1,16 @@
 import ApiClient from "../ApiClient";
 
+interface Reimbursement {
+  id: number;
+  description: string;
+  amount: number;
+  date: string;
+  userId: number;
+  location: string;
+  status: number;
+  receiptUrl?: string;
+}
+
 interface ReimbursementData {
   amount: number;
   description: string;
@@ -11,6 +22,25 @@ interface ReimbursementData {
 }
 
 export const ReimbursementService = {
+  async fetchReimbursements(): Promise<Reimbursement[]> {
+    try {
+      const response = await ApiClient.get("/claims");
+      return response.data.map((reimbursement: any) => ({
+        id: reimbursement.id,
+        description: reimbursement.description,
+        amount: parseFloat(reimbursement.amount),
+        date: reimbursement.date,
+        userId: reimbursement.user_id,
+        location: reimbursement.location,
+        status: reimbursement.status,
+        receiptUrl: reimbursement.receipt_url || "",
+      }));
+    } catch (error) {
+      console.error("Error fetching reimbursements:", error);
+      return [];
+    }
+  },
+
   async createReimbursement(data: ReimbursementData): Promise<void> {
     const formData = new FormData();
     formData.append("claim[amount]", data.amount.toString());
@@ -22,7 +52,7 @@ export const ReimbursementService = {
     if (data.tags) {
       data.tags
         .split(",")
-        .forEach((tag) => formData.append("claim[tags][]", tag.trim()));
+        .forEach((tag: string) => formData.append("claim[tags][]", tag.trim()));
     }
 
     if (data.receipts) {
