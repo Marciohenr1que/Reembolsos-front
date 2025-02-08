@@ -1,24 +1,27 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 defineProps<{
   id: string;
   label: string;
   modelValue: string;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
+  type: string;
+  required: boolean;
   error?: string;
+  placeholder?: string;
 }>();
 
-defineEmits<{
-  (e: "update:modelValue", value: string): void;
-}>();
+const emit = defineEmits(["update:modelValue"]);
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  emit("update:modelValue", target.value);
+};
 </script>
 
 <template>
   <div>
-    <label :for="id" class="block text-sm font-medium text-secondary">{{
-      label
-    }}</label>
+    <label :for="id" class="block text-sm font-medium text-secondary">
+      {{ label }}
+    </label>
     <div class="mt-1">
       <input
         :id="id"
@@ -29,7 +32,7 @@ defineEmits<{
         :placeholder="placeholder"
         class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
       />
+      <p v-if="error" class="mt-2 text-sm text-primary">{{ error }}</p>
     </div>
-    <p v-if="error" class="mt-2 text-sm text-primary">{{ error }}</p>
   </div>
 </template>

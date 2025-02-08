@@ -1,12 +1,13 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { UserService } from "../../api/services/UserService";
 import BaseForm from "@/components/BaseForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseSelect from "@/components/BaseSelect.vue";
 import BaseAlert from "@/components/BaseAlert.vue";
 import messages from "@/i18n/messages";
-
+import BaseHeading from "../components/ui/BaseHeading.vue";
 const router = useRouter();
 const name = ref("");
 const email = ref("");
@@ -15,35 +16,49 @@ const passwordConfirmation = ref("");
 const role = ref(0);
 const errors = ref<Record<string, string>>({});
 const successMessage = ref("");
+const isLoading = ref(false);
 
 const handleSubmit = async () => {
+  console.log("Dados do formulário ao submeter:", {
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: passwordConfirmation.value,
+    role: role.value,
+  });
+
   errors.value = {};
   successMessage.value = "";
+  isLoading.value = true;
 
   if (password.value !== passwordConfirmation.value) {
     errors.value.password_confirmation = messages.errors.passwords_mismatch;
+    isLoading.value = false;
     return;
   }
 
   try {
-    await register({
-      user: {
-        name: name.value,
-        email: email.value,
-        password: password.value,
-        password_confirmation: passwordConfirmation.value,
-        role: role.value,
-      },
+    await UserService.registerUser({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+      password_confirmation: passwordConfirmation.value,
+      role: role.value,
     });
 
     successMessage.value = messages.success.register;
     setTimeout(() => router.push("/"), 2000);
-  } catch (error) {
-    if (error instanceof Error) {
-      errors.value.email = error.message;
+  } catch (error: any) {
+    if (error.response?.data?.errors) {
+      errors.value = error.response.data.errors;
+    } else {
+      errors.value.general = messages.errors.generic;
     }
+  } finally {
+    isLoading.value = false;
   }
 };
+
 const roleOptions = [
   { value: 0, text: messages.roles.employee },
   { value: 1, text: messages.roles.manager },
@@ -53,9 +68,9 @@ const roleOptions = [
 <template>
   <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-      <h2 class="mt-6 text-center text-3xl font-bold text-secondary">
+      <BaseHeading level="1" className="text-center">
         {{ messages.create_account }}
-      </h2>
+      </BaseHeading>
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -65,9 +80,17 @@ const roleOptions = [
           :message="successMessage"
           type="success"
         />
-        <BaseAlert v-if="errors.email" :message="errors.email" type="error" />
+        <BaseAlert
+          v-if="errors.general"
+          :message="errors.general"
+          type="error"
+        />
 
-        <BaseForm :submit-text="messages.register" @submit="handleSubmit">
+        <BaseForm
+          :submit-text="messages.register"
+          @submit="handleSubmit"
+          :loading="isLoading"
+        >
           <BaseInput
             id="name"
             :label="messages.name"

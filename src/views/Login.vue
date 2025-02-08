@@ -5,6 +5,7 @@ import logo from "@/assets/logo.svg";
 import BaseForm from "@/components/BaseForm.vue";
 import BaseInput from "@/components/BaseInput.vue";
 import AuthLink from "@/components/AuthLink.vue";
+import { UserLoginService } from "../../api/services/UserLoginService";
 
 const router = useRouter();
 const email = ref("");
@@ -14,12 +15,17 @@ const errors = ref<Record<string, string>>({});
 const handleSubmit = async () => {
   errors.value = {};
   try {
-    await login({ email: email.value, password: password.value });
+    const { token, user } = await UserLoginService.loginUser({
+      email: email.value,
+      password: password.value,
+    });
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("role", user.role.toString());
+
     router.push("/dashboard");
   } catch (error) {
-    if (error instanceof Error) {
-      errors.value.email = messages.errors.login_failed;
-    }
+    errors.value.email = "Credenciais inválidas.";
   }
 };
 </script>

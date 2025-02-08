@@ -5,10 +5,20 @@ export default function authGuard(
   from: RouteLocationNormalized,
   next: NavigationGuardNext
 ): void {
-  const isAuthenticated: boolean = !!localStorage.getItem("token");
+  const token = localStorage.getItem("token");
+  const role = Number(localStorage.getItem("role"));
+
+  const isAuthenticated = !!token;
+
+  const roleRoutes: Record<number, string> = {
+    0: "/dashboard/employee",
+    1: "/dashboard/manager",
+  };
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: "Login" });
+  } else if (to.path === "/dashboard" && isAuthenticated) {
+    next(roleRoutes[role] || "/dashboard");
   } else {
     next();
   }
