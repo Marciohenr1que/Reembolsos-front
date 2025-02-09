@@ -1,11 +1,11 @@
 export interface Reimbursement {
   id: number;
   description: string;
-  amount: number;
+  amount: string;
   date: string;
-  userId: number;
-  location: string;
   status: number;
-  receipts?: string[];
-  tags?: string[] | string | null;
+  user_id: number;
+  location: string;
+  receipts: string[];
+  tags: { id: number; name: string }[];
 }

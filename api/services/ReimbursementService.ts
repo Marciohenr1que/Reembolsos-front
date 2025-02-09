@@ -5,24 +5,30 @@ interface ReimbursementApiResponse {
   description: string;
   amount: string;
   date: string;
+  status: number;
   user_id: number;
   location: string;
-  status: number;
-  receipt?: string;
-  tags?: string[] | string | null;
+  receipts: string[];
+  tags: { id: number; name: string }[];
 }
 
-export async function fetchReimbursements(): Promise<
+export const fetchReimbursements = async (): Promise<
   ReimbursementApiResponse[]
-> {
-  try {
-    const response = await ApiClient.get<ReimbursementApiResponse[]>("/claims");
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao buscar reembolsos:", error);
-    return [];
+> => {
+  const response = await ApiClient.get<{ claims: ReimbursementApiResponse[] }>(
+    "/claims"
+  );
+
+  if (!response.data?.claims) {
+    throw new Error("Dados inválidos recebidos da API");
   }
-}
+
+  return response.data.claims.map((claim) => ({
+    ...claim,
+    amount: parseFloat(claim.amount), // Converte amount para número (se necessário)
+    tags: claim.tags.map((tag) => tag.name), // Extrai apenas os nomes das tags
+  }));
+};
 
 export async function createReimbursement(
   data: Partial<ReimbursementApiResponse>
@@ -58,11 +64,11 @@ function buildFormData(data: Partial<ReimbursementApiResponse>): FormData {
   if (data.location) formData.append("claim[location]", data.location);
 
   if (
-    data.receipt &&
-    typeof data.receipt === "object" &&
-    "name" in data.receipt
+    data.receipts &&
+    typeof data.receipts === "object" &&
+    "name" in data.receipts
   ) {
-    formData.append("claim[receipts][]", data.receipt as File);
+    formData.append("claim[receipts][]", data.receipts as File);
   }
 
   if (Array.isArray(data.tags) && data.tags.length > 0) {

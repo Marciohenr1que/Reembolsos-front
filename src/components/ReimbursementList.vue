@@ -5,13 +5,21 @@ import BaseHeading from "../components/ui/BaseHeading.vue";
 import StatusBadge from "../components/ui/StatusBadge.vue";
 import dashboard from "../i18n/dashboard";
 import { formatCurrency } from "../utils/currency";
+import TagBadge from "./ui/TagBadge.vue";
+import Pagination from "../components/Pagination.vue";
 
 const store = useReimbursementStore();
 
 const reimbursements = computed(() => store.reimbursements);
+const currentPage = computed(() => store.currentPage);
+const totalPages = computed(() => store.totalPages);
 
-onMounted(async () => {
-  await store.loadReimbursements();
+const handlePageChange = (page: number) => {
+  store.loadReimbursements(page);
+};
+
+onMounted(() => {
+  store.loadReimbursements();
 });
 </script>
 
@@ -44,13 +52,11 @@ onMounted(async () => {
               Local: {{ reimbursement.location }}
             </p>
             <div class="flex flex-wrap gap-2 mt-2">
-              <span
+              <TagBadge
                 v-for="tag in reimbursement.tags"
                 :key="tag"
-                class="bg-accent text-secondary text-xs px-2 py-1 rounded-full"
-              >
-                {{ tag }}
-              </span>
+                :tag="tag"
+              />
             </div>
           </div>
           <StatusBadge :status="reimbursement.status" />
@@ -59,5 +65,11 @@ onMounted(async () => {
     </ul>
 
     <p v-else class="text-center text-gray-500">Nenhum reembolso encontrado.</p>
+
+    <Pagination
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      @pageChange="handlePageChange"
+    />
   </div>
 </template>
