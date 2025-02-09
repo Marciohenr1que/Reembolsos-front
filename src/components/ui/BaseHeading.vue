@@ -3,7 +3,7 @@ import { computed } from "vue";
 
 interface Props {
   level?: 1 | 2 | 3 | 4 | 5 | 6;
-  className?: string;
+  class?: string;
 }
 
 const props = defineProps<Props>();
@@ -18,7 +18,7 @@ const baseClass = computed(() => {
     5: "text-base font-medium text-gray-600 mb-2",
     6: "text-sm font-medium text-gray-500 mb-1",
   };
-  return `${styles[props.level || 1]} ${props.className || ""}`;
+  return `${styles[props.level || 1]} ${props.class || ""}`;
 });
 </script>
 

@@ -30,7 +30,7 @@ const handleInput = (event: Event) => {
         @input="handleInput"
         :required="required"
         :placeholder="placeholder"
-        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+        class="currency-input"
       />
       <p v-if="error" class="mt-2 text-sm text-primary">{{ error }}</p>
     </div>

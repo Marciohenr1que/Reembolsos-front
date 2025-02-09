@@ -2,7 +2,7 @@
 defineProps<{
   id: string;
   label: string;
-  modelValue: File | null; // Agora aceita arquivos
+  modelValue: File | null;
   required?: boolean;
   error?: string;
 }>();
@@ -14,6 +14,13 @@ const emit = defineEmits<{
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0] || null;
+
+  if (file) {
+    console.log("📂 Arquivo selecionado:", file.name);
+  } else {
+    console.log("⚠️ Nenhum arquivo selecionado");
+  }
+
   emit("update:modelValue", file);
 };
 </script>
@@ -29,7 +36,7 @@ const handleFileChange = (event: Event) => {
         type="file"
         @change="handleFileChange"
         :required="required"
-        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+        class="currency-input"
       />
     </div>
     <p v-if="error" class="mt-2 text-sm text-primary">{{ error }}</p>

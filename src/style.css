@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.status-badge {
+  @apply px-3 py-1 text-xs font-semibold rounded-full border;
+}
+
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800 border-yellow-400;
+}
+
+.status-approved {
+  @apply bg-green-100 text-green-800 border-green-400;
+}
+
+.status-denied {
+  @apply bg-red-100 text-red-800 border-red-400;
+}
+
+.status-unknown {
+  @apply bg-gray-100 text-gray-800 border-gray-400;
+}
+
+.currency-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm 
+           placeholder-gray-400 focus:outline-none focus:ring-primary 
+           focus:border-primary text-sm;
+}
+
+.text-muted {
+  @apply text-gray-600;
+}

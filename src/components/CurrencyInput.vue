@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { formatCurrency } from "../utils/currency";
 
 interface Props {
   modelValue: string;
@@ -19,20 +20,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const emit = defineEmits(["update:modelValue"]);
-
-const formatToBRL = (value: string): string => {
-  const number = Number(value) / 100;
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(number);
-};
-
 const displayValue = computed(() => {
   if (!props.modelValue) return "";
-  return formatToBRL(props.modelValue);
+  return formatCurrency(props.modelValue);
 });
 
 const handleInput = (event: Event) => {
@@ -43,10 +33,9 @@ const handleInput = (event: Event) => {
 </script>
 
 <template>
-  <div class="currency-input">
+  <div>
     <label v-if="label" :for="id" class="block text-sm font-medium mb-1">
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
     </label>
 
     <input
@@ -56,7 +45,7 @@ const handleInput = (event: Event) => {
       @input="handleInput"
       :placeholder="placeholder"
       :required="required"
-      class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
+      class="currency-input"
       :class="{ 'border-red-500': error }"
     />
 

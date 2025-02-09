@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { toast } from "vue-sonner";
+import { useReimbursementStore } from "../stores/reimbursementStore";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseFileInput from "@/components/BaseFileInput.vue";
 import BaseForm from "@/components/BaseForm.vue";
-import { ReimbursementService } from "../../api/services/ReimbursementService";
 import CurrencyInput from "./CurrencyInput.vue";
+
+const reimbursementStore = useReimbursementStore();
+
 const form = ref({
   amount: "",
   description: "",
@@ -17,18 +21,38 @@ const form = ref({
 
 const errors = ref<{ [key: string]: string }>({});
 
+const resetForm = () => {
+  form.value = {
+    amount: "",
+    description: "",
+    receipts: null,
+    date: "",
+    location: "",
+    tags: "",
+    status: 0,
+  };
+};
+
 const submitReimbursement = async () => {
   errors.value = {};
 
   try {
-    await ReimbursementService.createReimbursement({
+    const newReimbursement = {
       ...form.value,
       amount: Number(form.value.amount),
-    });
-    alert("Reembolso enviado com sucesso!");
+      tags: form.value.tags
+        ? form.value.tags.split(",").map((tag) => tag.trim())
+        : [],
+    };
+
+    await reimbursementStore.addReimbursement(newReimbursement);
+    toast.success("Reembolso enviado com sucesso! ✔️");
+
+    resetForm();
   } catch (error) {
     console.error(error);
     errors.value.general = "Erro ao enviar reembolso.";
+    toast.error("Erro ao enviar reembolso! ❌");
   }
 };
 </script>
@@ -52,6 +76,7 @@ const submitReimbursement = async () => {
       id="receipts"
       label="Anexar Comprovante"
       v-model="form.receipts"
+      required
     />
     <BaseInput
       id="date"
@@ -70,6 +95,7 @@ const submitReimbursement = async () => {
       id="tags"
       label="Tags (separadas por vírgula)"
       v-model="form.tags"
+      required
     />
   </BaseForm>
 </template>
