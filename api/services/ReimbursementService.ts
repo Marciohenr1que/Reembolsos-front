@@ -1,81 +1,83 @@
 import ApiClient from "../ApiClient";
 
-interface ReimbursementApiResponse {
+export interface Reimbursement {
   id: number;
   description: string;
-  amount: string;
+  amount: number;
   date: string;
   status: number;
   user_id: number;
   location: string;
   receipts: string[];
+  tags: string[];
+}
+
+interface ReimbursementApiResponse
+  extends Omit<Reimbursement, "amount" | "tags"> {
+  amount: string;
   tags: { id: number; name: string }[];
 }
 
-export const fetchReimbursements = async (): Promise<
-  ReimbursementApiResponse[]
-> => {
-  const response = await ApiClient.get<{ claims: ReimbursementApiResponse[] }>(
-    "/claims"
-  );
+interface ReimbursementApiResponsePaginated {
+  claims: ReimbursementApiResponse[];
+  currentPage: number;
+  totalPages: number;
+}
 
-  if (!response.data?.claims) {
-    throw new Error("Dados inválidos recebidos da API");
+export const fetchReimbursements = async (page = 1) => {
+  try {
+    const { data } = await ApiClient.get<ReimbursementApiResponsePaginated>(
+      "/claims",
+      {
+        params: { page },
+      }
+    );
+
+    return {
+      claims: data.claims.map((claim) => ({
+        ...claim,
+        amount: parseFloat(claim.amount),
+        tags: claim.tags.map((tag) => tag.name),
+      })),
+      currentPage: data.currentPage ?? 1,
+      totalPages: data.totalPages ?? 1,
+    };
+  } catch (error) {
+    console.error("Erro ao buscar reembolsos:", error);
+    throw new Error("Falha ao carregar os dados.");
   }
-
-  return response.data.claims.map((claim) => ({
-    ...claim,
-    amount: parseFloat(claim.amount), // Converte amount para número (se necessário)
-    tags: claim.tags.map((tag) => tag.name), // Extrai apenas os nomes das tags
-  }));
 };
 
-export async function createReimbursement(
-  data: Partial<ReimbursementApiResponse>
-): Promise<ReimbursementApiResponse> {
+export const createReimbursement = async (
+  data: Partial<Reimbursement>
+): Promise<Reimbursement> => {
   const formData = buildFormData(data);
 
   try {
-    const response = await ApiClient.post<{
+    const { data: response } = await ApiClient.post<{
       message: string;
-      claim: ReimbursementApiResponse;
+      claim: Reimbursement;
     }>("/claims", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    if (!response.data.claim || !response.data.claim.id) {
-      throw new Error("Resposta da API inválida");
-    }
-
-    return response.data.claim;
+    return response.claim;
   } catch (error) {
     console.error("Erro ao criar reembolso:", error);
-    throw error;
+    throw new Error("Erro ao criar reembolso.");
   }
-}
+};
 
-function buildFormData(data: Partial<ReimbursementApiResponse>): FormData {
+const buildFormData = (data: Partial<Reimbursement>): FormData => {
   const formData = new FormData();
-  if (data.amount) formData.append("claim[amount]", data.amount.toString());
-  if (data.description) formData.append("claim[description]", data.description);
-  if (data.status !== undefined)
-    formData.append("claim[status]", data.status.toString());
-  if (data.date) formData.append("claim[date]", data.date);
-  if (data.location) formData.append("claim[location]", data.location);
-
-  if (
-    data.receipts &&
-    typeof data.receipts === "object" &&
-    "name" in data.receipts
-  ) {
-    formData.append("claim[receipts][]", data.receipts as File);
-  }
-
-  if (Array.isArray(data.tags) && data.tags.length > 0) {
-    data.tags.forEach((tag) => formData.append("claim[tags][]", tag));
-  } else if (typeof data.tags === "string" && data.tags.trim() !== "") {
-    formData.append("claim[tags][]", data.tags);
-  }
-
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      if (Array.isArray(value)) {
+        value.forEach((v) => formData.append(`claim[${key}][]`, v.toString()));
+      } else {
+        formData.append(`claim[${key}]`, value.toString());
+      }
+    }
+  });
   return formData;
-}
+};

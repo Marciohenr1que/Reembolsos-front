@@ -14,7 +14,6 @@ interface ReimbursementApiResponse {
   tags?: string[] | string | null;
 }
 
-// Função para converter os dados recebidos da API
 function formatReimbursement(data: ReimbursementApiResponse): Reimbursement {
   return {
     id: data.id,
