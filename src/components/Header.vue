@@ -26,7 +26,7 @@ const logout = () => {
 </script>
 
 <template>
-  <nav v-if="isAuthenticated" class="bg-white shadow-sm">
+  <nav v-if="isAuthenticated" class="bg-white shadow-sm w-full">
     <div class="container mx-auto px-4">
       <div class="flex justify-between h-16">
         <div class="flex">

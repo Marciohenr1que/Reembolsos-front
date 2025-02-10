@@ -1,47 +1,78 @@
+<!-- ManagerDashboard.vue -->
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { fetchReimbursements } from "../../api/services/ReimbursementService";
+import { useReimbursementStore } from "../stores/reimbursementStore";
+import SearchInput from "../components/ui/SearchInput.vue";
+import ReimbursementItem from "../components/ReimbursementItem.vue";
+import {
+  fetchReimbursements,
+  Reimbursement,
+} from "../../api/services/ReimbursementService";
 import Header from "../components/Header.vue";
 import BaseHeading from "../components/ui/BaseHeading.vue";
-const reimbursements = ref([]);
 
-const fetchData = async () => {
-  reimbursements.value = await fetchReimbursements();
+const reimbursementStore = useReimbursementStore();
+const reimbursements = ref<Reimbursement[]>([]);
+const currentPage = ref(1);
+const totalPages = ref(1);
+
+const loadReimbursements = async (page = 1, searchQuery = "") => {
+  const result = await fetchReimbursements(page, searchQuery);
+  reimbursements.value = result.claims;
+  currentPage.value = result.currentPage;
+  totalPages.value = result.totalPages;
 };
 
-onMounted(fetchData);
+const handleSearch = (query: string) => {
+  loadReimbursements(1, query);
+};
+
+const handleUpdateStatus = async (id: number, newStatus: number) => {
+  try {
+    await reimbursementStore.updateReimbursementStatus(id, newStatus);
+    await loadReimbursements(currentPage.value);
+  } catch (error) {
+    console.error("Erro ao atualizar status:", error);
+  }
+};
+
+const handlePageChange = (newPage: number) => {
+  loadReimbursements(newPage);
+};
+
+onMounted(() => {
+  loadReimbursements();
+});
 </script>
 
 <template>
   <Header />
-  <div class="container mx-auto mt-8">
-    <BaseHeading :level="2" class="text-primary">
-      Pending Reimbursements
-    </BaseHeading>
-
-    <div class="mt-4 space-y-4">
-      <div
+  <div class="container mx-auto py-8">
+    <BaseHeading :level="1"> Pedidos de Reembolso </BaseHeading>
+    <SearchInput
+      placeholder="Pesquisar por tag, nome ou status"
+      @search="handleSearch"
+    />
+    <div class="mt-8">
+      <ReimbursementItem
         v-for="reimbursement in reimbursements"
         :key="reimbursement.id"
-        class="bg-white p-4 rounded-xl shadow-md"
+        :reimbursement="reimbursement"
+        @updateStatus="handleUpdateStatus"
+      />
+    </div>
+    <div class="mt-4 flex justify-center">
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        @click="handlePageChange(page)"
+        :class="[
+          'mx-1 px-3 py-1 rounded',
+          currentPage === page ? 'bg-primary text-white' : 'bg-gray-200',
+        ]"
       >
-        <p><strong>Status:</strong> {{ reimbursement.status }}</p>
-        <p><strong>Date:</strong> {{ reimbursement.date }}</p>
-        <p><strong>Location:</strong> {{ reimbursement.location }}</p>
-        <p><strong>Amount:</strong> R$ {{ reimbursement.amount.toFixed(2) }}</p>
-        <p><strong>Description:</strong> {{ reimbursement.description }}</p>
-        <p>
-          <strong>Tags:</strong>
-          {{ reimbursement.tags?.join(", ") || "No tags" }}
-        </p>
-
-        <img
-          v-if="reimbursement.receipts"
-          :src="reimbursement.receipts"
-          class="mt-2 max-w-xs"
-          alt="receipts"
-        />
-      </div>
+        {{ page }}
+      </button>
     </div>
   </div>
 </template>

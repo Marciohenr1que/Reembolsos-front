@@ -7,8 +7,8 @@ import dashboard from "@/i18n/dashboard";
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral">
-    <Header />
+  <Header />
+  <div class="md:container mx-auto bg-neutral">
     <main class="container mx-auto px-4 py-8">
       <BaseHeading :level="1">
         {{ dashboard.titles.reimbursement_requests }}

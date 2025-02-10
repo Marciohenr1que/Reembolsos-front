@@ -1,3 +1,4 @@
+// reimbursementService.ts
 import ApiClient from "../ApiClient";
 
 export interface Reimbursement {
@@ -6,7 +7,7 @@ export interface Reimbursement {
   amount: number;
   date: string;
   status: number;
-  user_id: number;
+  user_name: string;
   location: string;
   receipts: string[];
   tags: string[];
@@ -24,12 +25,12 @@ interface ReimbursementApiResponsePaginated {
   totalPages: number;
 }
 
-export const fetchReimbursements = async (page = 1) => {
+export const fetchReimbursements = async (page = 1, searchQuery = "") => {
   try {
     const { data } = await ApiClient.get<ReimbursementApiResponsePaginated>(
       "/claims",
       {
-        params: { page },
+        params: { page, search: searchQuery },
       }
     );
 
@@ -37,6 +38,7 @@ export const fetchReimbursements = async (page = 1) => {
       claims: data.claims.map((claim) => ({
         ...claim,
         amount: parseFloat(claim.amount),
+        user_name: claim.user_name,
         tags: claim.tags.map((tag) => tag.name),
       })),
       currentPage: data.currentPage ?? 1,
@@ -65,6 +67,18 @@ export const createReimbursement = async (
   } catch (error) {
     console.error("Erro ao criar reembolso:", error);
     throw new Error("Erro ao criar reembolso.");
+  }
+};
+
+export const updateReimbursementStatus = async (
+  id: number,
+  newStatus: number
+): Promise<void> => {
+  try {
+    await ApiClient.patch(`/claims/${id}`, { status: newStatus });
+  } catch (error) {
+    console.error("Erro ao atualizar status do reembolso:", error);
+    throw new Error("Erro ao atualizar status do reembolso.");
   }
 };
 

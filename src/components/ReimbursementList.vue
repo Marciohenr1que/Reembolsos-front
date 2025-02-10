@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useReimbursementStore } from "../stores/reimbursementStore";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 import StatusBadge from "../components/ui/StatusBadge.vue";
@@ -9,6 +9,15 @@ import TagBadge from "./ui/TagBadge.vue";
 import Pagination from "../components/Pagination.vue";
 
 const store = useReimbursementStore();
+
+const reimbursements = computed(() => store.reimbursements);
+const currentPage = computed(() => store.currentPage);
+const totalPages = computed(() => store.totalPages);
+
+const handlePageChange = (page: number) => {
+  if (page < 1 || page > totalPages.value) return;
+  store.loadReimbursements(page);
+};
 
 onMounted(() => {
   store.loadReimbursements();
@@ -23,9 +32,9 @@ onMounted(() => {
 
     <div v-if="store.isLoading" class="text-center py-4">Carregando...</div>
 
-    <ul v-else-if="store.reimbursements.length" class="space-y-4">
+    <ul v-else-if="reimbursements.length" class="space-y-4">
       <li
-        v-for="reimbursement in store.reimbursements"
+        v-for="reimbursement in reimbursements"
         :key="reimbursement.id"
         class="border-b pb-4 last:border-b-0"
       >
@@ -59,9 +68,9 @@ onMounted(() => {
     <p v-else class="text-center text-gray-500">Nenhum reembolso encontrado.</p>
 
     <Pagination
-      :currentPage="store.currentPage"
-      :totalPages="store.totalPages"
-      @pageChange="store.loadReimbursements"
+      :currentPage="currentPage"
+      :totalPages="totalPages"
+      @pageChange="handlePageChange"
     />
   </div>
 </template>

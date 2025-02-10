@@ -1,10 +1,12 @@
-<script setup></script>
+<script setup>
+import { Toaster } from "vue-sonner";
+</script>
 
 <template>
-  <Toaster />
+  <Toaster position="top-right" richColors closeButton theme="light" />
   <div class="min-h-screen bg-neutral">
     <main>
-      <div class="container mx-auto py-6">
+      <div class="">
         <router-view></router-view>
       </div>
     </main>

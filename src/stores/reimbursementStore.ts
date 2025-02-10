@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { reactive, toRefs } from "vue";
+import { toast } from "vue-sonner";
 import {
   fetchReimbursements,
   createReimbursement,
+  updateReimbursementStatus as updateStatusService,
   Reimbursement,
 } from "../../api/services/ReimbursementService";
 
@@ -27,6 +29,7 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
     } catch (err) {
       state.error =
         err instanceof Error ? err.message : "Erro ao carregar reembolsos";
+      toast.error(state.error);
     } finally {
       state.isLoading = false;
     }
@@ -36,10 +39,28 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
     try {
       const created = await createReimbursement(newReimbursement);
       state.reimbursements.unshift(created);
+      toast.success("Reembolso enviado com sucesso!");
       return created;
     } catch (err) {
       state.error =
         err instanceof Error ? err.message : "Erro ao adicionar reembolso";
+      toast.error(state.error);
+      throw err;
+    }
+  };
+
+  const updateReimbursementStatus = async (id: number, newStatus: number) => {
+    try {
+      await updateStatusService(id, newStatus);
+      const reimbursement = state.reimbursements.find((r) => r.id === id);
+      if (reimbursement) {
+        reimbursement.status = newStatus;
+        toast.success("Status atualizado com sucesso!");
+      }
+    } catch (err) {
+      state.error =
+        err instanceof Error ? err.message : "Erro ao atualizar status";
+      toast.error(state.error);
       throw err;
     }
   };
@@ -48,5 +69,6 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
     ...toRefs(state),
     loadReimbursements,
     addReimbursement,
+    updateReimbursementStatus,
   };
 });

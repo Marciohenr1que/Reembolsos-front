@@ -46,13 +46,10 @@ const submitReimbursement = async () => {
     };
 
     await reimbursementStore.addReimbursement(newReimbursement);
-    toast.success("Reembolso enviado com sucesso! ✔️");
-
     resetForm();
   } catch (error) {
     console.error(error);
     errors.value.general = "Erro ao enviar reembolso.";
-    toast.error("Erro ao enviar reembolso! ❌");
   }
 };
 </script>

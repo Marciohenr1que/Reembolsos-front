@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <p class="mt-4 text-center text-sm text-muted">
+  <p class="mt-4 text-center text-sm text-gray-600">
     {{ text }}
     <router-link :to="to" class="text-primary font-medium hover:underline">
       {{ linkText }}

@@ -4,7 +4,7 @@ export interface Reimbursement {
   amount: string;
   date: string;
   status: number;
-  user_id: number;
+  user_name: string;
   location: string;
   receipts: string[];
   tags: { id: number; name: string }[];

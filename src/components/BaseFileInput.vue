@@ -16,9 +16,8 @@ const handleFileChange = (event: Event) => {
   const file = target.files?.[0] || null;
 
   if (file) {
-    console.log("📂 Arquivo selecionado:", file.name);
   } else {
-    console.log("⚠️ Nenhum arquivo selecionado");
+    console.log("Nenhum arquivo selecionado");
   }
 
   emit("update:modelValue", file);

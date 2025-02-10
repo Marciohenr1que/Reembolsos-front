@@ -31,3 +31,20 @@
 .text-muted {
   @apply text-gray-600;
 }
+.sonner-toast[data-type="success"] {
+  background-color: #22c55e !important;
+  color: white !important;
+}
+
+.sonner-toast[data-type="error"] {
+  background-color: #dc2626 !important;
+  color: white !important;
+}
+
+.sonner-toast[data-type="success"] .sonner-toast-progress {
+  background-color: #16a34a !important;
+}
+
+.sonner-toast[data-type="error"] .sonner-toast-progress {
+  background-color: #b91c1c !important;
+}
