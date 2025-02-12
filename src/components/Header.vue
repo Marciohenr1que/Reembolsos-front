@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import logo from "@/assets/logo.svg";
 import BaseButton from "@/components/ui/BaseButton.vue";
 
+const { t } = useI18n();
 const router = useRouter();
 const isAuthenticated = ref(false);
 
@@ -12,7 +14,6 @@ const checkAuth = () => {
 };
 
 onMounted(checkAuth);
-
 watchEffect(() => {
   checkAuth();
 });
@@ -35,9 +36,9 @@ const logout = () => {
           </div>
         </div>
         <div class="flex items-center">
-          <BaseButton variant="primary" size="md" @click="logout"
-            >Sair</BaseButton
-          >
+          <BaseButton variant="primary" size="md" @click="logout">
+            {{ t("navbar.logout") }}
+          </BaseButton>
         </div>
       </div>
     </div>

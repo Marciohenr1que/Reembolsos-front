@@ -37,6 +37,10 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
 
   const addReimbursement = async (newReimbursement: Partial<Reimbursement>) => {
     try {
+      if (newReimbursement.receipts?.some((r) => !(r instanceof File))) {
+        throw new Error("Os arquivos devem ser do tipo File.");
+      }
+
       const created = await createReimbursement(newReimbursement);
       state.reimbursements.unshift(created);
       toast.success("Reembolso enviado com sucesso!");

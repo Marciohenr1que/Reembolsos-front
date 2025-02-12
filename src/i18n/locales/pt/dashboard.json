@@ -1,0 +1,39 @@
+{
+  "titles": {
+    "dashboard": "Painel de Controle",
+    "reimbursement_requests": "Solicitações de Reembolso"
+  },
+  "labels": {
+    "description": "Descrição",
+    "amount": "Valor",
+    "date": "Data",
+    "location": "Local",
+    "employee": "Funcionário",
+    "none": "Nenhum reembolso encontrado.",
+    "view_receipt": "Ver Comprovante",
+    "approve": "Aprovar",
+    "deny": "Negar",
+    "search_placeholder": "Pesquisar por tag, nome ou status"
+  },
+  "messages": {
+    "loading": "Carregando...",
+    "update_status_error": "Erro ao atualizar status"
+  },
+  "navbar": {
+    "logout": "Sair"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próximo"
+  },
+  "status": {
+    "pending": "Pendente",
+    "approved": "Aprovado",
+    "denied": "Negado",
+    "unknown": "Desconhecido"
+  },
+  "search": {
+    "placeholder": "Pesquisar...",
+    "button": "Pesquisar"
+  }
+}

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
 import BaseButton from "./BaseButton.vue";
 import BaseInput from "../../components/baseInput.vue";
 
+const { t } = useI18n();
+
 const props = defineProps<{
-  placeholder: string;
+  placeholder?: string;
 }>();
 
 const searchQuery = ref("");
@@ -28,7 +31,7 @@ watch(searchQuery, (newValue) => {
       label=""
       v-model="searchQuery"
       type="text"
-      :placeholder="placeholder"
+      :placeholder="placeholder || t('search.placeholder')"
       :required="false"
       class="md:pr-14 w-full"
     />
@@ -37,7 +40,7 @@ watch(searchQuery, (newValue) => {
       class="absolute inset-y-0 md:right-14 right-0 my-auto md:px-6 rounded-l-none"
       @click="handleSearch"
     >
-      Pesquisar
+      {{ t("search.button") }}
     </BaseButton>
   </div>
 </template>

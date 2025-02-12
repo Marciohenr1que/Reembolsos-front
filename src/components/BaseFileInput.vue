@@ -2,25 +2,24 @@
 defineProps<{
   id: string;
   label: string;
-  modelValue: File | null;
+  modelValue: File[];
   required?: boolean;
   error?: string;
 }>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: File | null): void;
+  (e: "update:modelValue", value: File[]): void;
 }>();
 
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const file = target.files?.[0] || null;
+  const files = target.files ? Array.from(target.files) : [];
 
-  if (file) {
-  } else {
+  if (files.length === 0) {
     console.log("Nenhum arquivo selecionado");
   }
 
-  emit("update:modelValue", file);
+  emit("update:modelValue", files);
 };
 </script>
 
@@ -33,6 +32,7 @@ const handleFileChange = (event: Event) => {
       <input
         :id="id"
         type="file"
+        multiple
         @change="handleFileChange"
         :required="required"
         class="currency-input"

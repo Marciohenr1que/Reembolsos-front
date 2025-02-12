@@ -1,4 +1,3 @@
-// reimbursementService.ts
 import ApiClient from "../ApiClient";
 
 export interface Reimbursement {
@@ -84,14 +83,22 @@ export const updateReimbursementStatus = async (
 
 const buildFormData = (data: Partial<Reimbursement>): FormData => {
   const formData = new FormData();
+
   Object.entries(data).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (Array.isArray(value)) {
-        value.forEach((v) => formData.append(`claim[${key}][]`, v.toString()));
+        value.forEach((v) => {
+          if (v instanceof File) {
+            formData.append(`claim[${key}][]`, v);
+          } else {
+            formData.append(`claim[${key}][]`, v.toString());
+          }
+        });
       } else {
         formData.append(`claim[${key}]`, value.toString());
       }
     }
   });
+
   return formData;
 };

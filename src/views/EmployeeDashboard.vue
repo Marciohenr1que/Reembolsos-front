@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 import ReimbursementForm from "@/components/ReimbursementForm.vue";
 import ReimbursementList from "@/components/ReimbursementList.vue";
 import BaseHeading from "@/components/ui/BaseHeading.vue";
-import dashboard from "@/i18n/dashboard";
+import dashboard from "../i18n/locales/pt/dashboard.json";
 </script>
 
 <template>

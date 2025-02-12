@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from "vue";
+import { useI18n } from "vue-i18n";
 import { Reimbursement } from "../../api/services/reimbursement";
 import TagBadge from "../components/ui/TagBadge.vue";
 import StatusBadge from "../components/ui/StatusBadge.vue";
@@ -7,6 +8,8 @@ import { formatCurrency } from "../utils/currency";
 import BaseButton from "../components/ui/BaseButton.vue";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 import ReceiptModal from "../components/ReceiptModal.vue";
+
+const { t } = useI18n();
 
 const props = defineProps({
   reimbursement: {
@@ -32,12 +35,19 @@ const isModalOpen = ref(false);
       </BaseHeading>
       <StatusBadge :status="reimbursement.status" />
     </div>
-    <p class="text-muted">Funcionário: {{ reimbursement.user_name }}</p>
-    <p class="text-muted">Valor: {{ formatCurrency(reimbursement.amount) }}</p>
     <p class="text-muted">
-      Data: {{ new Date(reimbursement.date).toLocaleDateString() }}
+      {{ t("labels.employee") }}: {{ reimbursement.user_name }}
     </p>
-    <p class="text-muted">Local: {{ reimbursement.location }}</p>
+    <p class="text-muted">
+      {{ t("labels.amount") }}: {{ formatCurrency(reimbursement.amount) }}
+    </p>
+    <p class="text-muted">
+      {{ t("labels.date") }}:
+      {{ new Date(reimbursement.date).toLocaleDateString() }}
+    </p>
+    <p class="text-muted">
+      {{ t("labels.location") }}: {{ reimbursement.location }}
+    </p>
 
     <div class="mt-2 flex gap-2 flex-wrap">
       <TagBadge
@@ -49,7 +59,7 @@ const isModalOpen = ref(false);
 
     <div class="mt-4">
       <BaseButton variant="link" @click="isModalOpen = true">
-        Ver Comprovante
+        {{ t("labels.view_receipt") }}
       </BaseButton>
     </div>
 
@@ -61,10 +71,10 @@ const isModalOpen = ref(false);
 
     <div class="mt-4 flex justify-end gap-2">
       <BaseButton variant="primary" @click="handleStatusChange(1)">
-        Aprovar
+        {{ t("labels.approve") }}
       </BaseButton>
       <BaseButton variant="secondary" @click="handleStatusChange(2)">
-        Negar
+        {{ t("labels.deny") }}
       </BaseButton>
     </div>
   </div>

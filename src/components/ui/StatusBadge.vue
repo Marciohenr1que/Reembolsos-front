@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const props = defineProps<{
   status: number;
@@ -7,15 +10,15 @@ const props = defineProps<{
 
 const statusMap = {
   0: {
-    label: "Pendente",
+    label: "status.pending",
     class: "status-pending",
   },
   1: {
-    label: "Aprovado",
+    label: "status.approved",
     class: "status-approved",
   },
   2: {
-    label: "Negado",
+    label: "status.denied",
     class: "status-denied",
   },
 };
@@ -25,7 +28,7 @@ const numericStatus = computed(() => Number(props.status));
 const statusInfo = computed(() => {
   return (
     statusMap[numericStatus.value] || {
-      label: "Desconhecido",
+      label: "status.unknown",
       class: "status-unknown",
     }
   );
@@ -34,6 +37,6 @@ const statusInfo = computed(() => {
 
 <template>
   <span :class="['status-badge', statusInfo.class]">
-    {{ statusInfo.label }}
+    {{ t(statusInfo.label) }}
   </span>
 </template>

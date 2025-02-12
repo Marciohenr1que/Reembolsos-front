@@ -1,6 +1,6 @@
-<!-- ManagerDashboard.vue -->
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import { useReimbursementStore } from "../stores/reimbursementStore";
 import SearchInput from "../components/ui/SearchInput.vue";
 import ReimbursementItem from "../components/ReimbursementItem.vue";
@@ -11,6 +11,7 @@ import {
 import Header from "../components/Header.vue";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 
+const { t } = useI18n();
 const reimbursementStore = useReimbursementStore();
 const reimbursements = ref<Reimbursement[]>([]);
 const currentPage = ref(1);
@@ -32,7 +33,7 @@ const handleUpdateStatus = async (id: number, newStatus: number) => {
     await reimbursementStore.updateReimbursementStatus(id, newStatus);
     await loadReimbursements(currentPage.value);
   } catch (error) {
-    console.error("Erro ao atualizar status:", error);
+    console.error(t("messages.update_status_error"), error);
   }
 };
 
@@ -48,9 +49,11 @@ onMounted(() => {
 <template>
   <Header />
   <div class="container mx-auto py-8">
-    <BaseHeading :level="1"> Pedidos de Reembolso </BaseHeading>
+    <BaseHeading :level="1">
+      {{ t("titles.reimbursement_requests") }}
+    </BaseHeading>
     <SearchInput
-      placeholder="Pesquisar por tag, nome ou status"
+      :placeholder="t('labels.search_placeholder')"
       @search="handleSearch"
     />
     <div class="mt-8">
