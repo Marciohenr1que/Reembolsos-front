@@ -71,7 +71,7 @@ const showEditButton = computed(
       <TagBadge
         v-for="(tag, index) in reimbursement.tags"
         :key="index"
-        :tag="tag.name"
+        :tag="tag"
       />
     </div>
 
