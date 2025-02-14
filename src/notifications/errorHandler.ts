@@ -1,6 +1,10 @@
 import { toast } from "vue-sonner";
-import { errors, ErrorCodes } from "./errors";
+import { errors, ErrorCodes } from "./Errors";
 import { AxiosError } from "axios";
+
+interface ValidationErrorResponse {
+  errors?: string[];
+}
 
 export function handleApiError(error: AxiosError): Promise<never> {
   console.error("Erro na requisição:", error);
@@ -19,8 +23,9 @@ export function handleApiError(error: AxiosError): Promise<never> {
   };
 
   let message = errorData.message;
-  if (status === 422 && (data as any).errors) {
-    message = (data as any).errors.join("\n");
+
+  if (status === 422 && (data as ValidationErrorResponse).errors) {
+    message = (data as ValidationErrorResponse).errors!.join("\n");
   }
 
   toast.error(message, { description: errorData.title });
@@ -32,4 +37,7 @@ export function handleApiError(error: AxiosError): Promise<never> {
 
   return Promise.reject(new Error(message));
 }
-(window as any).handleApiError = handleApiError;
+
+(
+  window as unknown as { handleApiError: typeof handleApiError }
+).handleApiError = handleApiError;

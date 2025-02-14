@@ -1,18 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useReimbursementStore } from "../stores/ReimbursementStore";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 import StatusBadge from "../components/ui/StatusBadge.vue";
 import { formatCurrency } from "../utils/currency";
 import TagBadge from "./ui/TagBadge.vue";
-import Pagination from "../components/Pagination.vue";
+import Pagination from "./AppPagination.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
 const { t } = useI18n();
 
-const isModalOpen = ref(false);
-const selectedReimbursement = ref(null);
 const store = useReimbursementStore();
 const reimbursements = computed(() => store.reimbursements);
 const currentPage = computed(() => store.currentPage);

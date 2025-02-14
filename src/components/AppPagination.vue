@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, computed } from "vue";
-import BaseButton from "@/components/ui/BaseButton.vue";
+import BaseButton from "../components/ui/BaseButton.vue";
 
 const props = defineProps({
   currentPage: Number,
@@ -17,7 +17,7 @@ const nextDisabled = computed(() => props.currentPage === props.totalPages);
     <BaseButton
       variant="outline"
       size="sm"
-      @click="emit('pageChange', props.currentPage - 1)"
+      @click="emit('pageChange', props.currentPage ?? -1)"
       :disabled="prevDisabled"
     >
       ⬅ Anterior
@@ -28,7 +28,7 @@ const nextDisabled = computed(() => props.currentPage === props.totalPages);
     <BaseButton
       variant="outline"
       size="sm"
-      @click="emit('pageChange', props.currentPage + 1)"
+      @click="emit('pageChange', (props.currentPage ?? 1) + 1)"
       :disabled="nextDisabled"
     >
       Próximo ➡

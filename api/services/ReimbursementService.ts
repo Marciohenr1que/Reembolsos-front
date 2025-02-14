@@ -3,7 +3,7 @@ import ApiClient from "../ApiClient";
 export interface Reimbursement {
   id: number;
   description: string;
-  amount: number;
+  amount: string;
   date: string;
   status: number;
   user_name: string;
@@ -67,13 +67,16 @@ export const createReimbursement = async (
     }
 
     return response.claim!;
-  } catch (error: any) {
-    if (error.response && error.response.status === 422) {
+  } catch (error: unknown) {
+    const err = error as any;
+
+    if (err.response && err.response.status === 422) {
       const errorMessage =
-        error.response.data.errors?.join("\n") || "Erro ao criar reembolso.";
+        err.response.data?.errors?.join("\n") || "Erro ao criar reembolso.";
       alert(errorMessage);
     }
-    console.error("Erro ao criar reembolso:", error);
+
+    console.error("Erro ao criar reembolso:", err);
     throw new Error("Erro ao criar reembolso.");
   }
 };

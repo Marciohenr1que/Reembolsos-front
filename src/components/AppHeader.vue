@@ -2,8 +2,8 @@
 import { ref, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import logo from "@/assets/logo.svg";
-import BaseButton from "@/components/ui/BaseButton.vue";
+import logo from "../assets/logo.svg";
+import BaseButton from "../components/ui/BaseButton.vue";
 
 const { t } = useI18n();
 const router = useRouter();

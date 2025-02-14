@@ -31,7 +31,12 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
     try {
       const { claims, currentPage, totalPages } =
         await fetchReimbursements(page);
-      state.reimbursements = claims;
+
+      state.reimbursements = claims.map((claim) => ({
+        ...claim,
+        amount: claim.amount.toString(),
+      }));
+
       state.currentPage = currentPage;
       state.totalPages = totalPages;
     } catch (err) {

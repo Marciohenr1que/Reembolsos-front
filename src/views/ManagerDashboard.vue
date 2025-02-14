@@ -8,7 +8,7 @@ import {
   fetchReimbursements,
   Reimbursement,
 } from "../../api/services/ReimbursementService";
-import Header from "../components/Header.vue";
+import Header from "../components/AppHeader.vue";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 
 const { t } = useI18n();
@@ -19,7 +19,11 @@ const totalPages = ref(1);
 
 const loadReimbursements = async (page = 1, searchQuery = "") => {
   const result = await fetchReimbursements(page, searchQuery);
-  reimbursements.value = result.claims;
+  reimbursements.value = result.claims.map((claim) => ({
+    ...claim,
+    amount: claim.amount.toString(),
+  }));
+
   currentPage.value = result.currentPage;
   totalPages.value = result.totalPages;
 };

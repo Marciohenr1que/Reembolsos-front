@@ -2,33 +2,31 @@ import { ref, onMounted } from "vue";
 import { fetchReimbursements } from "./ReimbursementService";
 import { Reimbursement } from "./reimbursement";
 
-interface ReimbursementApiResponse {
-  id: number;
-  description: string;
-  amount: string;
-  date: string;
-  user_id: number;
-  location: string;
-  status: number;
-  receipt?: string;
-  tags?: string[] | string | null;
+interface ApiResponse {
+  claims: {
+    id: number;
+    description: string;
+    amount: number;
+    date: string;
+    user_name: string;
+    location: string;
+    status: number;
+    receipts: string[];
+    tags: string[];
+  }[];
 }
 
-function formatReimbursement(data: ReimbursementApiResponse): Reimbursement {
+function formatReimbursement(data: ApiResponse["claims"][0]): Reimbursement {
   return {
     id: data.id,
     description: data.description,
-    amount: parseFloat(data.amount),
+    amount: data.amount.toString(),
     date: data.date,
-    userId: data.user_id,
+    user_name: data.user_name,
     location: data.location,
     status: data.status,
-    receipts: data.receipt ? [data.receipt] : [],
-    tags: Array.isArray(data.tags)
-      ? data.tags
-      : typeof data.tags === "string" && data.tags.trim() !== ""
-        ? data.tags.split(",").map((tag) => tag.trim())
-        : [],
+    receipts: data.receipts || [],
+    tags: data.tags.map((tag) => ({ id: 0, name: tag })),
   };
 }
 
@@ -37,8 +35,13 @@ export function useReimbursements() {
 
   const loadReimbursements = async (): Promise<void> => {
     try {
-      const response = await fetchReimbursements();
-      reimbursements.value = response.map(formatReimbursement);
+      const response: ApiResponse = await fetchReimbursements();
+
+      if (!response.claims) {
+        throw new Error("Invalid API response format.");
+      }
+
+      reimbursements.value = response.claims.map(formatReimbursement);
     } catch (error) {
       console.error("Failed to load reimbursements:", error);
     }

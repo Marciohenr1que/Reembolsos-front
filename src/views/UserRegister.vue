@@ -2,11 +2,11 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { UserService } from "../../api/services/UserService";
-import BaseForm from "@/components/BaseForm.vue";
-import BaseInput from "@/components/BaseInput.vue";
-import BaseSelect from "@/components/BaseSelect.vue";
-import BaseAlert from "@/components/BaseAlert.vue";
-import messages from "@/i18n/messages";
+import BaseForm from "../components/BaseForm.vue";
+import BaseInput from "../components/BaseInput.vue";
+import BaseSelect from "../components/BaseSelect.vue";
+import BaseAlert from "../components/BaseAlert.vue";
+import messages from "../i18n/messages";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 const router = useRouter();
 const name = ref("");
@@ -48,7 +48,7 @@ const handleSubmit = async () => {
 
     successMessage.value = messages.success.register;
     setTimeout(() => router.push("/"), 2000);
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error.response?.data?.errors) {
       errors.value = error.response.data.errors;
     } else {

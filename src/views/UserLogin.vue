@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import logo from "@/assets/logo.svg";
-import BaseForm from "@/components/BaseForm.vue";
-import BaseInput from "@/components/BaseInput.vue";
-import AuthLink from "@/components/AuthLink.vue";
+import BaseForm from "../components/BaseForm.vue";
+import BaseInput from "../components/BaseInput.vue";
+import AuthLink from "../components/AuthLink.vue";
 import { UserLoginService } from "../../api/services/UserLoginService";
 
 const router = useRouter();
@@ -24,7 +24,7 @@ const handleSubmit = async () => {
     localStorage.setItem("role", user.role.toString());
 
     router.push("/dashboard");
-  } catch (error) {
+  } catch {
     errors.value.email = "Credenciais inválidas.";
   }
 };

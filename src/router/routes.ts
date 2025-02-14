@@ -1,6 +1,6 @@
 import { RouteRecordRaw } from "vue-router";
-import Login from "../views/Login.vue";
-import Register from "../views/Register.vue";
+import Login from "../views/UserLogin.vue";
+import Register from "../views/UserRegister.vue";
 import EmployeeDashboard from "../views/EmployeeDashboard.vue";
 import ManagerDashboard from "../views/ManagerDashboard.vue";
 

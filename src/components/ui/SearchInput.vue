@@ -6,10 +6,6 @@ import BaseInput from "../../components/baseInput.vue";
 
 const { t } = useI18n();
 
-const props = defineProps<{
-  placeholder?: string;
-}>();
-
 const searchQuery = ref("");
 const emit = defineEmits(["search"]);
 

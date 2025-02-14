@@ -12,7 +12,6 @@ const pinia = createPinia();
 app.use(router);
 app.use(pinia);
 app.use(i18n);
-
-app.component("Toaster", Toaster);
+app.use(Toaster);
 
 app.mount("#app");

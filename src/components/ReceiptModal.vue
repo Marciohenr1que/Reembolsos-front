@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, computed } from "vue";
-import Pagination from "../components/Pagination.vue";
+import Pagination from "./AppPagination.vue";
 
 const props = defineProps({
   receipts: {
