@@ -1,0 +1,14 @@
+{
+  "200": {
+    "title": "Sucesso!",
+    "message": "Ação concluída com sucesso."
+  },
+  "201": {
+    "title": "Criado!",
+    "message": "Registro criado com sucesso."
+  },
+  "204": {
+    "title": "Atualizado!",
+    "message": "Registro atualizado com sucesso."
+  }
+}

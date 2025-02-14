@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useReimbursementStore } from "../stores/reimbursementStore";
 import BaseHeading from "../components/ui/BaseHeading.vue";
@@ -7,17 +7,21 @@ import StatusBadge from "../components/ui/StatusBadge.vue";
 import { formatCurrency } from "../utils/currency";
 import TagBadge from "./ui/TagBadge.vue";
 import Pagination from "../components/Pagination.vue";
+import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
 
-const store = useReimbursementStore();
 const { t } = useI18n();
 
+const isModalOpen = ref(false);
+const selectedReimbursement = ref(null);
+const store = useReimbursementStore();
 const reimbursements = computed(() => store.reimbursements);
 const currentPage = computed(() => store.currentPage);
 const totalPages = computed(() => store.totalPages);
+const isLoadingNextPage = computed(() => store.isLoadingNextPage);
 
-const handlePageChange = (page: number) => {
+const handlePageChange = async (page: number) => {
   if (page < 1 || page > totalPages.value) return;
-  store.loadReimbursements(page);
+  await store.loadReimbursements(page);
 };
 
 onMounted(() => {
@@ -31,31 +35,53 @@ onMounted(() => {
       {{ t("titles.dashboard") }}
     </BaseHeading>
 
-    <div v-if="store.isLoading" class="text-center py-4">
-      {{ t("messages.loading") }}
+    <div v-if="store.isLoading && !isLoadingNextPage" class="text-center py-4">
+      <LoadingSpinner />
     </div>
 
-    <ul v-else-if="reimbursements.length" class="space-y-4">
+    <ul v-else-if="reimbursements.length" class="space-y-4 relative">
       <li
         v-for="reimbursement in reimbursements"
         :key="reimbursement.id"
-        class="border-b pb-4 last:border-b-0"
+        class="border-b pb-4 last:border-b-0 opacity-100 transition-opacity duration-300 cursor-pointer hover:bg-gray-100 p-2 rounded-lg"
       >
         <div class="flex justify-between items-start">
           <div>
             <p class="font-semibold text-secondary">
-              {{ t("labels.description") }}: {{ reimbursement.description }}
+              <BaseHeading
+                :level="5"
+                class="text-gray-900 font-semibold inline"
+              >
+                {{ t("labels.description") }}:
+              </BaseHeading>
+              {{ reimbursement.description }}
             </p>
             <p class="text-sm text-gray-600">
-              {{ t("labels.amount") }}:
+              <BaseHeading
+                :level="5"
+                class="text-gray-900 font-semibold inline"
+              >
+                {{ t("labels.amount") }}:
+              </BaseHeading>
               {{ formatCurrency(reimbursement.amount) }}
             </p>
             <p class="text-sm text-gray-600">
-              {{ t("labels.date") }}:
+              <BaseHeading
+                :level="5"
+                class="text-gray-900 font-semibold inline"
+              >
+                {{ t("labels.date") }}:
+              </BaseHeading>
               {{ new Date(reimbursement.date).toLocaleDateString() }}
             </p>
             <p class="text-sm text-gray-600">
-              {{ t("labels.location") }}: {{ reimbursement.location }}
+              <BaseHeading
+                :level="5"
+                class="text-gray-900 font-semibold inline"
+              >
+                {{ t("labels.location") }}:
+              </BaseHeading>
+              {{ reimbursement.location }}
             </p>
             <div class="flex flex-wrap gap-2 mt-2">
               <TagBadge
@@ -68,6 +94,13 @@ onMounted(() => {
           <StatusBadge :status="reimbursement.status" />
         </div>
       </li>
+
+      <div
+        v-if="isLoadingNextPage"
+        class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50"
+      >
+        <LoadingSpinner />
+      </div>
     </ul>
 
     <p v-else class="text-center text-gray-500">

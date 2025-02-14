@@ -50,7 +50,7 @@ onMounted(() => {
   <Header />
   <div class="container mx-auto py-8">
     <BaseHeading :level="1">
-      {{ t("titles.reimbursement_requests") }}
+      {{ t("titles.reimbursement_requests_manager") }}
     </BaseHeading>
     <SearchInput
       :placeholder="t('labels.search_placeholder')"

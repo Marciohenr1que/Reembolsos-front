@@ -56,14 +56,23 @@ export const createReimbursement = async (
 
   try {
     const { data: response } = await ApiClient.post<{
-      message: string;
-      claim: Reimbursement;
+      errors?: string[];
+      claim?: Reimbursement;
     }>("/claims", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    return response.claim;
-  } catch (error) {
+    if (response.errors) {
+      throw new Error(response.errors.join("\n"));
+    }
+
+    return response.claim!;
+  } catch (error: any) {
+    if (error.response && error.response.status === 422) {
+      const errorMessage =
+        error.response.data.errors?.join("\n") || "Erro ao criar reembolso.";
+      alert(errorMessage);
+    }
     console.error("Erro ao criar reembolso:", error);
     throw new Error("Erro ao criar reembolso.");
   }

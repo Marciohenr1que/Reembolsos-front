@@ -1,0 +1,26 @@
+{
+  "401": {
+    "title": "Sessão expirada",
+    "message": "Fazendo novo login..."
+  },
+  "403": {
+    "title": "Acesso negado",
+    "message": "Você não tem permissão para esta ação."
+  },
+  "404": {
+    "title": "Recurso não encontrado",
+    "message": "O item solicitado não foi encontrado."
+  },
+  "422": {
+    "title": "Erro de validação",
+    "message": "Erro ao processar requisição."
+  },
+  "500": {
+    "title": "Erro no servidor",
+    "message": "Erro interno do servidor. Tente novamente mais tarde."
+  },
+  "NETWORK": {
+    "title": "Erro de conexão",
+    "message": "Erro de conexão com o servidor!"
+  }
+}

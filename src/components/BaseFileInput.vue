@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-defineProps<{
+import { ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
+const props = defineProps<{
   id: string;
   label: string;
   modelValue: File[];
@@ -11,16 +15,28 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: File[]): void;
 }>();
 
+const localError = ref<string | null>(null);
+
 const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement;
-  const files = target.files ? Array.from(target.files) : [];
+  let files = target.files ? Array.from(target.files) : [];
 
-  if (files.length === 0) {
-    console.log("Nenhum arquivo selecionado");
+  if (files.length > 2) {
+    localError.value = t("messages.max_files_error");
+    return;
+  } else {
+    localError.value = null;
   }
 
   emit("update:modelValue", files);
 };
+
+watch(
+  () => props.error,
+  (newError) => {
+    localError.value = newError ?? null;
+  }
+);
 </script>
 
 <template>
@@ -38,6 +54,6 @@ const handleFileChange = (event: Event) => {
         class="currency-input"
       />
     </div>
-    <p v-if="error" class="mt-2 text-sm text-primary">{{ error }}</p>
+    <p v-if="localError" class="mt-2 text-sm text-primary">{{ localError }}</p>
   </div>
 </template>

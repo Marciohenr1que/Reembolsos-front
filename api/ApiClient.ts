@@ -1,4 +1,6 @@
 import axios from "axios";
+import { handleApiError } from "../src/notifications/errorHandler";
+import { handleApiSuccess } from "../src/notifications/successHandler";
 
 const API_BASE_URL = "http://localhost:3001";
 
@@ -17,5 +19,13 @@ ApiClient.interceptors.request.use((config) => {
   }
   return config;
 });
+
+ApiClient.interceptors.response.use(
+  (response) => {
+    handleApiSuccess(response.status);
+    return response;
+  },
+  (error) => handleApiError(error)
+);
 
 export default ApiClient;

@@ -1,7 +1,8 @@
 {
   "titles": {
     "dashboard": "Painel de Controle",
-    "reimbursement_requests": "Solicitações de Reembolso"
+    "reimbursement_requests": "Solicitação de Reembolso",
+    "reimbursement_requests_manager": "Solicitações de Reembolso"
   },
   "labels": {
     "description": "Descrição",
@@ -13,11 +14,15 @@
     "view_receipt": "Ver Comprovante",
     "approve": "Aprovar",
     "deny": "Negar",
-    "search_placeholder": "Pesquisar por tag, nome ou status"
+    "search_placeholder": "Pesquisar por tag, nome ou status",
+    "danied": "Negado",
+    "approved": "Aprovado",
+    "edit": "Editar"
   },
   "messages": {
     "loading": "Carregando...",
-    "update_status_error": "Erro ao atualizar status"
+    "update_status_error": "Erro ao atualizar status",
+    "max_files_error": "Você pode selecionar no máximo 2 arquivos."
   },
   "navbar": {
     "logout": "Sair"

@@ -1,24 +1,32 @@
 import { defineStore } from "pinia";
 import { reactive, toRefs } from "vue";
-import { toast } from "vue-sonner";
 import {
   fetchReimbursements,
   createReimbursement,
   updateReimbursementStatus as updateStatusService,
   Reimbursement,
 } from "../../api/services/ReimbursementService";
+import { handleApiError } from "../notifications/errorHandler";
+import { handleApiSuccess } from "../notifications/successHandler";
 
 export const useReimbursementStore = defineStore("reimbursement", () => {
   const state = reactive({
     reimbursements: [] as Reimbursement[],
     isLoading: false,
+    isLoadingNextPage: false,
     error: null as string | null,
     currentPage: 1,
     totalPages: 1,
   });
 
   const loadReimbursements = async (page = 1) => {
-    state.isLoading = true;
+    if (page === state.currentPage) {
+      state.isLoading = true;
+      state.isLoadingNextPage = false;
+    } else {
+      state.isLoadingNextPage = true;
+    }
+
     state.error = null;
     try {
       const { claims, currentPage, totalPages } =
@@ -27,11 +35,10 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
       state.currentPage = currentPage;
       state.totalPages = totalPages;
     } catch (err) {
-      state.error =
-        err instanceof Error ? err.message : "Erro ao carregar reembolsos";
-      toast.error(state.error);
+      state.error = await handleApiError(err);
     } finally {
       state.isLoading = false;
+      state.isLoadingNextPage = false;
     }
   };
 
@@ -43,13 +50,11 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
 
       const created = await createReimbursement(newReimbursement);
       state.reimbursements.unshift(created);
-      toast.success("Reembolso enviado com sucesso!");
+      handleApiSuccess(201);
       return created;
     } catch (err) {
-      state.error =
-        err instanceof Error ? err.message : "Erro ao adicionar reembolso";
-      toast.error(state.error);
-      throw err;
+      state.error = await handleApiError(err);
+      return null;
     }
   };
 
@@ -59,13 +64,10 @@ export const useReimbursementStore = defineStore("reimbursement", () => {
       const reimbursement = state.reimbursements.find((r) => r.id === id);
       if (reimbursement) {
         reimbursement.status = newStatus;
-        toast.success("Status atualizado com sucesso!");
       }
+      handleApiSuccess(204);
     } catch (err) {
-      state.error =
-        err instanceof Error ? err.message : "Erro ao atualizar status";
-      toast.error(state.error);
-      throw err;
+      state.error = await handleApiError(err);
     }
   };
 

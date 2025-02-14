@@ -1,8 +1,8 @@
 import { RouteRecordRaw } from "vue-router";
-import Login from "@/views/Login.vue";
-import Register from "@/views/Register.vue";
-import EmployeeDashboard from "@/views/EmployeeDashboard.vue";
-import ManagerDashboard from "@/views/ManagerDashboard.vue";
+import Login from "../views/Login.vue";
+import Register from "../views/Register.vue";
+import EmployeeDashboard from "../views/EmployeeDashboard.vue";
+import ManagerDashboard from "../views/ManagerDashboard.vue";
 
 const routes: RouteRecordRaw[] = [
   {

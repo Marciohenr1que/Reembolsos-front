@@ -58,6 +58,7 @@ const submitReimbursement = async () => {
     <CurrencyInput
       id="amount"
       label="Valor"
+      type="string"
       v-model="form.amount"
       required
       :error="errors.amount"
@@ -84,6 +85,7 @@ const submitReimbursement = async () => {
     <BaseInput
       id="location"
       label="Localização"
+      type="string"
       v-model="form.location"
       required
     />
@@ -91,6 +93,7 @@ const submitReimbursement = async () => {
       id="tags"
       label="Tags (separadas por vírgula)"
       v-model="form.tags"
+      type="string"
       required
     />
   </BaseForm>

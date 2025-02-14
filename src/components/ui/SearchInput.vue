@@ -29,8 +29,8 @@ watch(searchQuery, (newValue) => {
     <BaseInput
       id="search"
       label=""
+      type="string"
       v-model="searchQuery"
-      type="text"
       :placeholder="placeholder || t('search.placeholder')"
       :required="false"
       class="md:pr-14 w-full"
