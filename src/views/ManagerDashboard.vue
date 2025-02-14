@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { useReimbursementStore } from "../stores/reimbursementStore";
+import { useReimbursementStore } from "../stores/ReimbursementStore";
 import SearchInput from "../components/ui/SearchInput.vue";
 import ReimbursementItem from "../components/ReimbursementItem.vue";
 import {

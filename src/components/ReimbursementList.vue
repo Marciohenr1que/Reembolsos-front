@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { useReimbursementStore } from "../stores/reimbursementStore";
+import { useReimbursementStore } from "../stores/ReimbursementStore";
 import BaseHeading from "../components/ui/BaseHeading.vue";
 import StatusBadge from "../components/ui/StatusBadge.vue";
 import { formatCurrency } from "../utils/currency";

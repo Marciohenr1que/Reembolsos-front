@@ -1,6 +1,6 @@
 import { ref, onMounted } from "vue";
-import { fetchReimbursements } from "../services/ReimbursementService";
-import { Reimbursement } from "../services/reimbursement";
+import { fetchReimbursements } from "./ReimbursementService";
+import { Reimbursement } from "./reimbursement";
 
 interface ReimbursementApiResponse {
   id: number;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useReimbursementStore } from "../stores/reimbursementStore";
+import { useReimbursementStore } from "../stores/ReimbursementStore";
 import BaseInput from "@/components/BaseInput.vue";
 import BaseFileInput from "@/components/BaseFileInput.vue";
 import BaseForm from "@/components/BaseForm.vue";

@@ -6,8 +6,8 @@ import {
   updateReimbursementStatus as updateStatusService,
   Reimbursement,
 } from "../../api/services/ReimbursementService";
-import { handleApiError } from "../notifications/errorHandler";
-import { handleApiSuccess } from "../notifications/successHandler";
+import { handleApiError } from "../notifications/ErrorHandler";
+import { handleApiSuccess } from "../notifications/SuccessHandler";
 
 export const useReimbursementStore = defineStore("reimbursement", () => {
   const state = reactive({

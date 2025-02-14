@@ -1,6 +1,6 @@
 import axios from "axios";
-import { handleApiError } from "../src/notifications/errorHandler";
-import { handleApiSuccess } from "../src/notifications/successHandler";
+import { handleApiError } from "../src/notifications/ErrorHandler";
+import { handleApiSuccess } from "../src/notifications/SuccessHandler";
 
 const API_BASE_URL = "http://localhost:3001";
 
