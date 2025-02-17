@@ -1,68 +1,84 @@
-Front Reembolso
+# Front Reembolso
 
-Este é um projeto frontend desenvolvido em Vue.js 3, utilizando Vite para um ambiente de desenvolvimento rápido e eficiente.
+Este é um projeto frontend desenvolvido em **Vue.js 3**, utilizando **Vite** para um ambiente de desenvolvimento rápido e eficiente.
 
-Requisitos
+## 🛠 Requisitos
 
-Node.js (versão recomendada: 18+)
+- **Node.js** (versão recomendada: 18+)
+- **Docker** (opcional, para rodar em ambiente conteinerizado)
 
-Docker (opcional, para rodar em ambiente conteinerizado)
+## 📦 Instalação
 
-Instalação
+### Clone o repositório:
 
-Clone o repositório:
-
+```bash
 git clone https://github.com/Marciohenr1que/Reembolsos-front.git
-cd front-reembolso
+cd Reembolsos-front
+```
 
-Instale as dependências:
+### Instale as dependências:
 
+```bash
 npm install
+```
 
-Executando o Projeto
+## 🚀 Executando o Projeto
 
-Para rodar a aplicação em ambiente de desenvolvimento:
+### Para rodar a aplicação em ambiente de desenvolvimento:
 
+```bash
 npm run dev
+```
 
-Acesse a aplicação em http://localhost:5173.
+Acesse a aplicação em [http://localhost:5173](http://localhost:5173).
 
-Construindo para Produção
+## 🐳 Executando com Docker
 
-npm run build
+### Crie a imagem do Docker:
 
-Executando com Docker
+```bash
+docker compose build
+```
 
-Crie a imagem do Docker:
+### Execute o container:
 
-docker build -t front-reembolso .
+```bash
+docker compose up
+```
 
-Execute o container:
+### Acesse o container:
 
-docker run -p 5173:5173 front-reembolso
+```bash
+docker exec -it reembolsos-front-frontend-1 sh
+```
 
-Estrutura do Projeto
+## 📂 Estrutura do Projeto
 
+```
 /front-reembolso
-├── src/ # Código-fonte principal
-├── public/ # Arquivos estáticos
-├── components/ # Componentes reutilizáveis
-├── views/ # Páginas principais
-├── store/ # Gerenciamento de estado (Pinia)
-├── router/ # Configuração das rotas (Vue Router)
-├── vite.config.ts # Configuração do Vite
-├── package.json # Dependências do projeto
+├── src/         # Código-fonte principal
+├── public/      # Arquivos estáticos
+├── components/  # Componentes reutilizáveis
+├── views/       # Páginas principais
+├── store/       # Gerenciamento de estado (Pinia)
+├── router/      # Configuração das rotas (Vue Router)
+├── vite.config.ts  # Configuração do Vite
+├── package.json    # Dependências do projeto
+```
 
-Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 
-Vue.js 3
+- **Vue.js 3**
+- **Vite**
+- **Pinia**
+- **Vue Router**
+- **Tailwind CSS**
+- **Axios**
 
-Vite
+## ✅ Rodando os Testes
 
-Pinia
+Para rodar os testes, execute:
 
-Vue Router
-
-Tailwind CSS
-
-Axios
+```bash
+npx vitest
+```
