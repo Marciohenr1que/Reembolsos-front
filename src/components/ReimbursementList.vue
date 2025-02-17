@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { onMounted, computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { useReimbursementStore } from "../stores/ReimbursementStore";
 import BaseHeading from "../components/ui/BaseHeading.vue";
@@ -8,6 +8,8 @@ import { formatCurrency } from "../utils/currency";
 import TagBadge from "./ui/TagBadge.vue";
 import Pagination from "./AppPagination.vue";
 import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import ReceiptModal from "./ReceiptModal.vue";
+import BaseButton from "./ui/BaseButton.vue";
 
 const { t } = useI18n();
 
@@ -25,6 +27,15 @@ const handlePageChange = async (page: number) => {
 onMounted(() => {
   store.loadReimbursements();
 });
+const selectedReimbursement = ref(null);
+
+const openModal = (reimbursement) => {
+  selectedReimbursement.value = reimbursement;
+};
+
+const closeModal = () => {
+  selectedReimbursement.value = null;
+};
 </script>
 
 <template>
@@ -88,6 +99,17 @@ onMounted(() => {
                 :tag="tag"
               />
             </div>
+            <div class="mt-4">
+              <BaseButton variant="link" @click="openModal(reimbursement)">
+                {{ t("labels.view_receipt") }}
+              </BaseButton>
+            </div>
+
+            <ReceiptModal
+              v-if="selectedReimbursement"
+              :receipts="selectedReimbursement.receipts"
+              @close="closeModal"
+            />
           </div>
           <StatusBadge :status="reimbursement.status" />
         </div>

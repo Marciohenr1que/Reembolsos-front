@@ -1,5 +1,5 @@
 import { toast } from "vue-sonner";
-import { successResponses, SuccessCodes } from "./success";
+import { successResponses, SuccessCodes } from "./Success";
 
 export function handleApiSuccess(status: number): void {
   const successKey = status.toString() as SuccessCodes;
